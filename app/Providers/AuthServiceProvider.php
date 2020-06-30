@@ -28,7 +28,5 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(15)); // access_token 过期时间
         Passport::refreshTokensExpireIn(now()->addDays(60)); // refresh_token 过期时间
-
-        //
     }
 }

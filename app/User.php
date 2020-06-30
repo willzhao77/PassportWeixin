@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens Trait 添加到 App\User 模型中 // 提供一些辅助函数检查已认证用户的令牌和使用范围
+use Laravel\Passport\HasApiTokens; //Trait 添加到 App\User 模型中 // 提供一些辅助函数检查已认证用户的令牌和使用范围
 
 class User extends Authenticatable
 {
