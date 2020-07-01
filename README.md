@@ -1,79 +1,119 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Passport 授权码模式
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+This is server side. 
 
-## About Laravel
+Client side is Bili.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+>   配套视频地址：https://www.bilibili.com/video/av74879198?p=7
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+------
 
-## Laravel Sponsors
+1. 哔哩哔哩提供一个“微信登陆”的链接，用户点击跳转到微信授权服务器。
+2. 用户根据微信授权服务器提示登陆微信并确认授权给哔哩哔哩。
+3. 微信授权服务器返回用户代理（浏览器）一个授权码。
+4. 用户代理（浏览器）把这个授权码传给哔哩哔哩。
+5. 哔哩哔哩凭借授权码向微信授权服务器请求令牌。
+6. 微信授权服务器发送令牌给哔哩哔哩。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### **服务器端（微信）**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+###### **配置**
 
-## Contributing
+```php
+composer create-project --prefer-dist laravel/laravel laravel6
+.env 数据库配置
+修改数据库默认字符串长度
+composer require laravel/passport
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+```php
+app\User.php
+    
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens; //Trait 添加到 App\User 模型中 // 提供一些辅助函数检查已认证用户的令牌和使用范围
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+class User extends Authenticatable
+{
+    use HasApiTokens, Notifiable;
+```
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+安装前端必备的东西（脚手架）
+
+```php
+下载 node   https://nodejs.org/en/
+composer require laravel/ui
+php artisan ui vue --auth
+npm install cnpm -g --registry=https://registry.npm.taobao.org
+cnpm install
+cnpm run prod
+composer require guzzlehttp/guzzle // 伪造 http 请求
+// config/auth.php
+
+'api' => [
+    'driver' => 'passport',
+    'provider' => 'users',
+    'hash' => false,
+],
+
+php artisan migrate // 创建表来存储客户端和 access_token 等
+php artisan passport:keys // 加密生成的 access_token
+   
+// 注册路由 AuthServiceProvider
+use Laravel\Passport\Passport;
+     
+    public function boot()
+    {
+        $this->registerPolicies();
+        Passport::routes();
+        Passport::tokensExpireIn(now()->addDays(15)); // access_token 过期时间
+        Passport::refreshTokensExpireIn(now()->addDays(60)); // refresh_token 过期时间
+    }
+```
+
+###### **创建客户端**
+
+```php
+php artisan passport:client
+//php 7.4.0 has problem. Received error:  Abort.
+//downgrade to 7.3.12   on system environment Variables
+```
+
+**Config Sample as below:**
+
+```cmd
+Which user ID should the client be assigned to?:
+
+ >
+
+
+ What should we name the client?:
+
+ > bili
+
+ Where should we redirect the request after authorization? [http://localhost/auth/callback]:
+
+ > http://bili.com/auth/callback
+
+New client created successfully.
+Client ID: 1
+Client secret: YuX9yuCn38Dl0sJWSFw7VVacInYz8KjRuW5iug8L
+```
+
+
+
+
+
+
+
